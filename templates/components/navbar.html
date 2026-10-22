@@ -1,4 +1,19 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+{% set ep = request.endpoint %}
+{# Theme setting nav_icons: "text" (default), "icon_text" (like core) or "icon" (icon + tooltip) #}
+{% set nav_style = (Configs.theme_settings or {}).get('nav_icons') or 'text' %}
+{% macro nav_item(style, icon, label) -%}
+  {%- if style == 'icon_text' -%}
+    <i class="fas {{ icon }} nav-icon"></i>{{ label }}
+  {%- elif style == 'icon' -%}
+    <i class="fas {{ icon }} nav-icon"></i><span class="nav-label">{{ label }}</span>
+  {%- else -%}
+    {{ label }}
+  {%- endif -%}
+{%- endmacro %}
+{% macro tip(style, label) -%}
+  {%- if style == 'icon' %} data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ label }}" aria-label="{{ label }}"{% endif -%}
+{%- endmacro %}
+<nav class="navbar navbar-expand-lg icn-nav">
   <div class="container">
     <a href="{{ url_for('views.static_html', route='/') }}" class="navbar-brand">
       {% if Configs.ctf_logo %}
@@ -6,7 +21,7 @@
             class="img-responsive ctf_logo"
             src="{{ url_for('views.files', path=Configs.ctf_logo) }}"
             alt="{{ Configs.ctf_name }}"
-            height="25"
+            height="28"
         >
       {% else %}
         {{ Configs.ctf_name }}
@@ -32,14 +47,14 @@
 
         {% if Configs.account_visibility != 'admins' %}
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('users.listing') }}">
+            <a class="nav-link" href="{{ url_for('users.listing') }}" {% if ep == 'users.listing' %}aria-current="page"{% endif %}>
               {% trans %}Users{% endtrans %}
             </a>
           </li>
 
           {% if Configs.user_mode == 'teams' %}
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('teams.listing') }}">
+              <a class="nav-link" href="{{ url_for('teams.listing') }}" {% if ep == 'teams.listing' %}aria-current="page"{% endif %}>
                 {% trans %}Teams{% endtrans %}
               </a>
             </li>
@@ -48,144 +63,91 @@
 
         {% if Configs.account_visibility != 'admins' and Configs.score_visibility != 'admins' %}
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('scoreboard.listing') }}">
+            <a class="nav-link" href="{{ url_for('scoreboard.listing') }}" {% if ep == 'scoreboard.listing' %}aria-current="page"{% endif %}>
               {% trans %}Scoreboard{% endtrans %}
             </a>
           </li>
         {% endif %}
 
         <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('challenges.listing') }}">
+          <a class="nav-link" href="{{ url_for('challenges.listing') }}" {% if ep == 'challenges.listing' %}aria-current="page"{% endif %}>
             {% trans %}Challenges{% endtrans %}
           </a>
         </li>
       </ul>
 
-      <hr class="d-sm-flex d-md-flex d-lg-none">
-
-      <ul class="navbar-nav ms-md-auto d-block d-sm-flex d-md-flex">
+      <ul class="navbar-nav ms-lg-auto align-items-lg-center nav-style-{{ nav_style }}">
         {% if authed() %}
 
           {% if is_admin() %}
             <li class="nav-item">
+              {# Admin Panel keeps its label even in icon mode #}
               <a class="nav-link" href="{{ url_for('admin.view') }}">
-                <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% trans %}Admin Panel{% endtrans %}">
-                    <i class="fas fa-wrench d-none d-md-inline d-lg-none"></i>
-                </span>
-                <span class="d-sm-inline d-md-none d-lg-inline">
-                  <i class="fas fa-wrench pe-1"></i>
-                  {% trans %}Admin Panel{% endtrans %}
-                </span>
+                {{ nav_item('text' if nav_style == 'icon' else nav_style, 'fa-wrench', _('Admin Panel')) }}
               </a>
             </li>
           {% endif %}
 
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('views.notifications') }}">
-              <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% trans %}Notifications{% endtrans %}">
-                <i class="fas fa-bell d-none d-md-inline d-lg-none"></i>
-              </span>
-              <span class="d-sm-inline d-md-none d-lg-inline">
-                  <i class="fas fa-bell pe-1"></i>
-                  <span x-data x-show="$store.unread_count > 0" x-text="$store.unread_count" class="badge rounded-pill bg-danger badge-notification"></span>
-                  {% trans %}Notifications{% endtrans %}
-              </span>
+            <a class="nav-link" href="{{ url_for('views.notifications') }}" {% if ep == 'views.notifications' %}aria-current="page"{% endif %}{{ tip(nav_style, _('Notifications')) }}>
+              {{ nav_item(nav_style, 'fa-bell', _('Notifications')) }}
+              <span x-data x-show="$store.unread_count > 0" x-text="$store.unread_count" class="badge rounded-pill badge-notification"></span>
             </a>
           </li>
 
           {% if Configs.user_mode == "teams" %}
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('teams.private') }}">
-                <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% trans %}Team{% endtrans %}">
-                  <i class="fas fa-users d-none d-md-inline d-lg-none"></i>
-                </span>
-                <span class="d-sm-inline d-md-none d-lg-inline">
-                  <i class="fas fa-users pe-1"></i>
-                  {% trans %}Team{% endtrans %}
-                </span>
+              <a class="nav-link" href="{{ url_for('teams.private') }}" {% if ep == 'teams.private' %}aria-current="page"{% endif %}{{ tip(nav_style, _('Team')) }}>
+                {{ nav_item(nav_style, 'fa-users', _('Team')) }}
               </a>
             </li>
           {% endif %}
 
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('users.private') }}">
-              <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% trans %}Profile{% endtrans %}">
-                <i class="fas fa-user-circle d-none d-md-inline d-lg-none"></i>
-              </span>
-              <span class="d-sm-inline d-md-none d-lg-inline">
-                <i class="fas fa-user-circle pe-1"></i>
-                {% trans %}Profile{% endtrans %}
-              </span>
+            <a class="nav-link" href="{{ url_for('users.private') }}" {% if ep == 'users.private' %}aria-current="page"{% endif %}{{ tip(nav_style, _('Profile')) }}>
+              {{ nav_item(nav_style, 'fa-user-circle', _('Profile')) }}
             </a>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('views.settings') }}">
-              <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% trans %}Settings{% endtrans %}">
-                <i class="fas fa-cogs d-none d-md-inline d-lg-none"></i>
-              </span>
-              <span class="d-sm-inline d-md-none d-lg-inline">
-                <i class="fas fa-cogs pe-1"></i>
-                {% trans %}Settings{% endtrans %}
-              </span>
+            <a class="nav-link" href="{{ url_for('views.settings') }}" {% if ep == 'views.settings' %}aria-current="page"{% endif %}{{ tip(nav_style, _('Settings')) }}>
+              {{ nav_item(nav_style, 'fa-cogs', _('Settings')) }}
             </a>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('auth.logout') }}">
-              <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% trans %}Logout{% endtrans %}">
-                <i class="fas fa-sign-out-alt d-none d-md-inline d-lg-none"></i>
-              </span>
-              <span class="d-sm-inline d-md-none d-lg-inline">
-                <i class="fas fa-sign-out-alt pe-1"></i><span class="d-lg-none">
-                  {% trans %}Logout{% endtrans %}
-                </span>
-              </span>
+            <a class="nav-link" href="{{ url_for('auth.logout') }}"{{ tip(nav_style, _('Logout')) }}>
+              {{ nav_item(nav_style, 'fa-sign-out-alt', _('Logout')) }}
             </a>
           </li>
         {% else %}
 
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('auth.login') }}">
+              {% trans %}Login{% endtrans %}
+            </a>
+          </li>
+
           {% if registration_visible() %}
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('auth.register') }}">
-                <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% trans %}Register{% endtrans %}">
-                  <i class="fas fa-user-plus d-none d-md-inline d-lg-none"></i>
-                </span>
-                <span class="d-sm-inline d-md-none d-lg-inline">
-                  <i class="fas fa-user-plus pe-1"></i>
-                  {% trans %}Register{% endtrans %}
-                </span>
+              <a class="pill pill-light pill-sm nav-pill" href="{{ url_for('auth.register') }}">
+                {% trans %}Register{% endtrans %}
               </a>
             </li>
           {% endif %}
-
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('auth.login') }}">
-              <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% trans %}Login{% endtrans %}">
-                <i class="fas fa-sign-in-alt d-none d-md-inline d-lg-none"></i>
-              </span>
-              <span class="d-sm-inline d-md-none d-lg-inline">
-                <i class="fas fa-sign-in-alt pe-1"></i>
-                {% trans %}Login{% endtrans %}
-              </span>
-            </a>
-          </li>
         {% endif %}
 
         <li class="nav-item dropdown">
-          <button class="nav-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fas fa-language d-none d-md-inline"></i>
-            <span class="d-sm-inline d-md-none">
-              <i class="fas fa-language pe-1"></i>
-              {% trans %}Change language{% endtrans %}
-            </span>
+          <button class="nav-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{% trans %}Change language{% endtrans %}">
+            <i class="fas fa-language"></i>
+            <span class="d-lg-none ps-1">{% trans %}Change language{% endtrans %}</span>
           </button>
           <form x-data="LanguageForm">
             <ul class="dropdown-menu dropdown-menu-end">
               {% set curr_lang = get_locale() %}
               {%- for lang in Languages.names.items() %}
               <li>
-                  <span class="dropdown-item {{ 'bg-primary text-white' if (curr_lang == lang[0]) }}" @click="set" value="{{ lang[0] }}">
+                  <span class="dropdown-item {{ 'active' if (curr_lang == lang[0]) }}" @click="set" value="{{ lang[0] }}">
                     {{ lang[1] }}
                   </span>
               </li>
@@ -194,15 +156,11 @@
           </form>
         </li>
 
+        {# color_mode_switcher.js binds .theme-switch and swaps the icon's fa-sun / fa-moon #}
         <li class="nav-item">
-          <button class="nav-link theme-switch" type="button">
-            <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% trans %}Toggle theme{% endtrans %}">
-              <i class="fas fa-sun d-none d-md-inline"></i>
-            </span>
-            <span class="d-sm-inline d-md-none">
-              <i class="fas fa-sun pe-1"></i>
-              {% trans %}Toggle theme{% endtrans %}
-            </span>
+          <button class="nav-link theme-switch" type="button" aria-label="{% trans %}Toggle theme{% endtrans %}">
+            <i class="fas fa-sun"></i>
+            <span class="d-lg-none ps-1">{% trans %}Toggle theme{% endtrans %}</span>
           </button>
         </li>
       </ul>
