@@ -43,6 +43,15 @@ export default defineConfig({
               src: "./assets/sounds/**",
               dest: "static/sounds",
             },
+            // ICN: plain CSS/JS loaded straight from base.html and page.html
+            {
+              src: "./assets/icn/css/*",
+              dest: "static/css",
+            },
+            {
+              src: "./assets/icn/js/*",
+              dest: "static/js",
+            },
           ],
           hook: "writeBundle",
         }),
