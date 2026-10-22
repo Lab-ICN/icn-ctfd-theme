@@ -36,27 +36,29 @@
 
       <div x-show="loaded">
         <template x-for="(category, idx) in getCategories()" :key="idx">
-          <div class="pt-5">
-            <div class="category-header mb-3">
+          <div class="category-block">
+            <div class="category-header section-head">
               <h3 x-text="category"></h3>
+              <span class="sub" x-text="`${getChallenges(category).filter((c) => c.solved_by_me).length}/${getChallenges(category).length} solved`"></span>
             </div>
 
-            <div class="category-challenges d-flex flex-column">
-              <div class="challenges-row row">
+            <div class="category-challenges">
+              <div class="challenges-row row g-3">
                 <template x-for="(c, idx) in getChallenges(category)" :key="c.id">
-                  <div class="col-sm-6 col-md-4 col-lg-3 my-3">
+                  <div class="col-sm-6 col-md-4 col-lg-3">
                     <button
-                        class="challenge-button btn btn-dark w-100 h-100"
+                        class="challenge-button challenge-card w-100 h-100"
                         :class="[
                           c.solved_by_me ? 'challenge-solved' : '',
                           ...c.tags.map((tag) => `tag-${tag.value.replace(/ /g, '-')}`),
                         ];"
                         :value="c.id" @click="loadChallenge(c.id)"
                     >
-
-                      <div class="challenge-inner my-3">
+                      <span class="ch-mark" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>
+                      <div class="challenge-inner">
                         <p x-text="c.name"></p>
-                        <span x-text="c.value"></span>
+                        <span class="ch-value" x-text="c.value"></span>
+                        <span class="ch-solves" x-show="c.solves !== undefined && c.solves !== null" x-text="`${c.solves} solve`"></span>
                       </div>
                     </button>
                   </div>
