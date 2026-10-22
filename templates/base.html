@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html data-bs-theme="dark">
 <head>
   <title>{{ title or Configs.ctf_name }}</title>
   <meta charset="utf-8">
@@ -8,13 +8,20 @@
 
   {{ meta | safe }}
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+
   {% block stylesheets %}
     {{ Assets.css("assets/scss/main.scss") }}
   {% endblock %}
-
-  {{ Plugins.styles }}
+  {# Bump on every change to assets/icn/: theme files are served with a 1 hour browser cache #}
+  {% set icn_version = "2026.10.23.7" %}
+  <link rel="stylesheet" href="{{ url_for('views.themes_beta', theme='icn', path='css/icn.css') }}?v={{ icn_version }}">
 
   {{ Assets.js("assets/js/color_mode_switcher.js", type=None) }}
+
+  {{ Plugins.styles }}
 
   <script type="text/javascript">
       window.init = {
@@ -31,8 +38,8 @@
           'end': {{ Configs.end | tojson }},
           'themeSettings': {{ Configs.theme_settings | tojson }},
           'eventSounds': [
-            "/themes/core/static/sounds/notification.webm",
-            "/themes/core/static/sounds/notification.mp3",
+            "/themes/icn/static/sounds/notification.webm",
+            "/themes/icn/static/sounds/notification.mp3",
           ],
       }
   </script>
@@ -50,12 +57,9 @@
 {% include "components/snackbar.html" %}
 
 <footer class="footer">
-  <div class="container text-center">
-    <a href="https://ctfd.io" class="text-secondary">
-      <small class="text-muted">
-        {% trans %}Powered by CTFd{% endtrans %}
-      </small>
-    </a>
+  <div class="container">
+    <span>{{ Configs.ctf_name }}</span>
+    <a href="https://ctfd.io">{% trans %}Powered by CTFd{% endtrans %}</a>
   </div>
 </footer>
 
