@@ -1,0 +1,77 @@
+{% set ts = Configs.theme_settings or {} %}
+<section class="sky sky-home">
+  <div class="container">
+    <div class="hero">
+      <div>
+        <h1>{{ ts.get('hero_title') or Configs.ctf_name }}</h1>
+        <p>{{ ts.get('hero_text') or Configs.ctf_description or "Solve challenges, capture flags, climb the scoreboard." }}</p>
+        <div class="hero-cta">
+          <a class="pill pill-dark" href="{{ url_for('challenges.listing') }}">{% trans %}Challenges{% endtrans %}</a>
+          {% if Configs.account_visibility != 'admins' and Configs.score_visibility != 'admins' %}
+            <a class="pill pill-light" href="{{ url_for('scoreboard.listing') }}">{% trans %}Scoreboard{% endtrans %}</a>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="frame" id="icn-frame">
+        <div class="lbl" data-icn="clock-label">&nbsp;</div>
+        <div class="big" data-icn="clock">--:--:--</div>
+        {% if ts.get('schedule_text') %}
+          <div class="when">{{ ts.get('schedule_text') }}</div>
+        {% endif %}
+        {% if authed() %}
+          <a class="pill pill-light pill-sm" href="{{ url_for('challenges.listing') }}">{% trans %}Challenges{% endtrans %}</a>
+        {% else %}
+          <a class="pill pill-light pill-sm" href="{{ url_for('auth.login') }}">{% trans %}Login{% endtrans %}</a>
+        {% endif %}
+        <div class="bar">
+          <div><b data-icn="stat-challenges">–</b><span>Challenges</span></div>
+          <div><b data-icn="stat-users">–</b><span>Players</span></div>
+          <div><b data-icn="stat-solves">–</b><span>Solves</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container home">
+  <div class="section-head">
+    <h2>Categories</h2>
+    <span class="sub"><span data-icn="cat-summary"></span><a href="{{ url_for('challenges.listing') }}">View all</a></span>
+  </div>
+
+  <div class="panel list" data-icn="categories">
+    <div class="empty">Loading challenges…</div>
+  </div>
+
+  <div class="duo">
+    <div>
+      <div class="section-head"><h2>Rules</h2></div>
+      <div class="panel rules">
+        {% if content and content | striptags | trim %}
+          {{ content | safe }}
+        {% else %}
+          <p class="empty">Nothing here yet. Edit the index page in Admin → Pages.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if Configs.account_visibility != 'admins' and Configs.score_visibility != 'admins' %}
+    <div>
+      <div class="section-head"><h2>Top 5</h2></div>
+      <div class="panel top">
+        <div data-icn="top"><div class="empty">Loading…</div></div>
+        <a class="all" href="{{ url_for('scoreboard.listing') }}">Full scoreboard</a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  window.ICN_HOME = {
+    challengesUrl: "{{ url_for('challenges.listing') }}",
+    loginUrl: "{{ url_for('auth.login') }}",
+    authed: {{ authed() | tojson }},
+  };
+</script>

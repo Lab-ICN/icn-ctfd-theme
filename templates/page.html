@@ -1,11 +1,25 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div class="container">
-    {{ content | safe }}
-  </div>
+  {% if request.path == url_for('views.static_html', route='/') %}
+    {% include "components/home.html" %}
+  {% else %}
+    {% if title %}
+      <div class="jumbotron">
+        <div class="container">
+          <h1>{{ title }}</h1>
+        </div>
+      </div>
+    {% endif %}
+    <div class="container page-content">
+      {{ content | safe }}
+    </div>
+  {% endif %}
 {% endblock %}
 
 {% block scripts %}
   {{ Assets.js("assets/js/page.js") }}
+  {% if request.path == url_for('views.static_html', route='/') %}
+    <script defer src="{{ url_for('views.themes_beta', theme='icn', path='js/home.js') }}?v=2026.10.23.7"></script>
+  {% endif %}
 {% endblock %}
