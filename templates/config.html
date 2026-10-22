@@ -1,9 +1,45 @@
 <form>
   <div class="form-group">
+    <label>
+      Hero Title<br>
+      <small class="form-text text-muted">Judul besar di home. Kosong = nama CTF.</small>
+    </label>
+    <input class="form-control" type="text" name="hero_title" placeholder="Forge-Day 2026">
+  </div>
+
+  <div class="form-group">
+    <label>
+      Hero Text<br>
+      <small class="form-text text-muted">Paragraf di bawah judul. Kosong = CTF description.</small>
+    </label>
+    <textarea class="form-control" name="hero_text" rows="3"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label>
+      Schedule Text<br>
+      <small class="form-text text-muted">Baris jadwal di bawah countdown, misal "Sabtu, 09.00–17.00 WIB". Kosong = disembunyikan.</small>
+    </label>
+    <input class="form-control" type="text" name="schedule_text">
+  </div>
+
+  <div class="form-group">
+    <label>
+      Navbar Icons<br>
+      <small class="form-text text-muted">Ikon di menu akun (Notifications, Profile, Settings, Logout).</small>
+    </label>
+    <select class="form-control custom-select" name="nav_icons">
+        <option value="text">Teks saja</option>
+        <option value="icon_text">Ikon + teks (seperti core)</option>
+        <option value="icon">Ikon saja + tooltip</option>
+    </select>
+  </div>
+
+  <div class="form-group">
     <label>Challenge Window Size</label>
     <select class="form-control custom-select" name="challenge_window_size">
-        <option value="sm">Small</option>
         <option value="norm">Normal</option>
+        <option value="sm">Small</option>
         <option value="lg">Large</option>
         <option value="xl">Extra Large</option>
     </select>
