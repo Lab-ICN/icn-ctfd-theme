@@ -7,11 +7,12 @@
   const init = window.init || {};
   const page = window.ICN_HOME || {};
   const root = init.urlRoot || "";
-  const $ = (key) => document.querySelector(`[data-icn="${key}"]`);
+  const $ = key => document.querySelector(`[data-icn="${key}"]`);
 
   const ICONS = {
     lock: '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
-    globe: '<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.6 3.6 5.4 3.6 8.5s-1.1 5.9-3.6 8.5c-2.5-2.6-3.6-5.4-3.6-8.5s1.1-5.9 3.6-8.5z"/>',
+    globe:
+      '<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.6 3.6 5.4 3.6 8.5s-1.1 5.9-3.6 8.5c-2.5-2.6-3.6-5.4-3.6-8.5s1.1-5.9 3.6-8.5z"/>',
     search: '<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/>',
     chip: '<rect x="6" y="6" width="12" height="12" rx="2"/><path d="M10 2v4M14 2v4M10 18v4M14 18v4M2 10h4M2 14h4M18 10h4M18 14h4"/>',
     flag: '<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',
@@ -103,7 +104,11 @@
     }
 
     for (const [category, list] of groups) {
-      const style = CATEGORY_STYLE.find(([re]) => re.test(category)) || [null, "flag", "c-other"];
+      const style = CATEGORY_STYLE.find(([re]) => re.test(category)) || [
+        null,
+        "flag",
+        "c-other",
+      ];
       const row = el("a", "row");
       row.href = page.challengesUrl;
 
@@ -112,19 +117,30 @@
 
       const main = el("div", "r-main");
       main.append(el("div", "r-name", category));
-      main.append(el("div", "r-sub", list.map((c) => c.name).join(" · ")));
+      main.append(el("div", "r-sub", list.map(c => c.name).join(" · ")));
 
-      const solved = list.filter((c) => c.solved_by_me).length;
+      const solved = list.filter(c => c.solved_by_me).length;
       const points = list.reduce((sum, c) => sum + (c.value || 0), 0);
       const count = el("div", "r-count");
       const n = el("div", "n", String(list.length));
       n.append(el("small", null, "chall"));
       count.append(n);
-      count.append(el("div", "p", page.authed ? `${solved}/${list.length} solved · ${points} pts` : `${points} pts`));
+      count.append(
+        el(
+          "div",
+          "p",
+          page.authed
+            ? `${solved}/${list.length} solved · ${points} pts`
+            : `${points} pts`,
+        ),
+      );
 
       const right = el("div", "r-right");
       right.append(count);
-      right.insertAdjacentHTML("beforeend", '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>');
+      right.insertAdjacentHTML(
+        "beforeend",
+        '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>',
+      );
 
       row.append(ic, main, right);
       box.append(row);
@@ -165,7 +181,10 @@
   async function loadUsers() {
     try {
       const body = await api("/api/v1/users?page=1");
-      const total = body.meta && body.meta.pagination ? body.meta.pagination.total : body.data.length;
+      const total =
+        body.meta && body.meta.pagination
+          ? body.meta.pagination.total
+          : body.data.length;
       $("stat-users").textContent = total;
     } catch (err) {
       // Account listing hidden: leave the dash.
