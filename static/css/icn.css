@@ -1226,6 +1226,7 @@ hr {
 /* Footer */
 .footer {
   position: static !important;
+  z-index: auto !important;
   height: auto !important;
   line-height: 1.5 !important;
   margin-top: 64px;
@@ -1246,6 +1247,14 @@ hr {
 }
 .footer a:hover {
   color: var(--icn-text-2);
+}
+.footer .theme-credit a {
+  color: var(--icn-blue-text);
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
+}
+.footer .theme-credit a:hover {
+  color: var(--icn-text);
 }
 
 /* Responsive --------------------------------------------------------------- */

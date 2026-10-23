@@ -16,7 +16,7 @@
     {{ Assets.css("assets/scss/main.scss") }}
   {% endblock %}
   {# Bump on every change to assets/icn/: theme files are served with a 1 hour browser cache #}
-  {% set icn_version = "2026.10.23.8" %}
+  {% set icn_version = "2026.10.23.10" %}
   <link rel="stylesheet" href="{{ url_for('views.themes_beta', theme='icn', path='css/icn.css') }}?v={{ icn_version }}">
 
   {{ Assets.js("assets/js/color_mode_switcher.js", type=None) }}
@@ -59,7 +59,7 @@
 <footer class="footer">
   <div class="container">
     <span>{{ Configs.ctf_name }}</span>
-    <span><a href="https://github.com/lab-icn/icn-ctfd-theme">ICN Theme</a> by <a href="https://github.com/abiabdillahx">zenc</a></span>
+    <span class="theme-credit"><a href="https://github.com/lab-icn/icn-ctfd-theme">ICN Theme</a> by <a href="https://github.com/abiabdillahx">zenc</a></span>
     <a href="https://ctfd.io">{% trans %}Powered by CTFd{% endtrans %}</a>
   </div>
 </footer>
