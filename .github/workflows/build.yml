@@ -2,29 +2,39 @@ name: build
 
 on:
   push:
-    branches: main
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
 
 jobs:
   static:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-        with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.ref }}
+      - uses: actions/checkout@v5
+
       - name: Setup node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v5
         with:
-          node-version: '16.x'
+          node-version: "22.x"
+          cache: yarn
+
       - name: Install dependencies
         run: yarn --frozen-lockfile
-      - name: Format
-        run: yarn format
+
+      - name: Check formatting
+        run: yarn lint
+
       - name: Build
         run: yarn build
-      - name: Push built files
-        uses: EndBug/add-and-commit@v9
-        with:
-          default_author: github_actions
-          message: "chore: yarn build"
+
+      # static/ is committed so CTFd can serve it without a build step
+      - name: Check built files are committed
+        run: |
+          if [ -n "$(git status --porcelain -- static)" ]; then
+            git status --short -- static
+            echo "static/ is out of date: run yarn build and commit the result"
+            exit 1
+          fi
