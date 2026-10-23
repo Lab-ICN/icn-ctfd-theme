@@ -38,12 +38,12 @@
     ]
   },
   "assets/js/scoreboard.js": {
-    "file": "assets/scoreboard.6eb971b9.js",
+    "file": "assets/scoreboard.c992053d.js",
     "src": "assets/js/scoreboard.js",
     "isEntry": true,
     "imports": [
       "assets/js/index.js",
-      "_index.0bde7d9c.js",
+      "_index.9f090500.js",
       "_echarts.128204f2.js"
     ]
   },
@@ -56,25 +56,25 @@
     ]
   },
   "assets/js/teams/public.js": {
-    "file": "assets/teams_public.53889007.js",
+    "file": "assets/teams_public.a8ce3566.js",
     "src": "assets/js/teams/public.js",
     "isEntry": true,
     "imports": [
       "assets/js/index.js",
-      "_userscore.1628df17.js",
-      "_index.0bde7d9c.js",
+      "_userscore.1e33b75a.js",
+      "_index.9f090500.js",
       "_echarts.128204f2.js"
     ]
   },
   "assets/js/teams/private.js": {
-    "file": "assets/teams_private.aa7558b2.js",
+    "file": "assets/teams_private.e25d2baa.js",
     "src": "assets/js/teams/private.js",
     "isEntry": true,
     "imports": [
       "assets/js/index.js",
       "_clipboard.26e62f1b.js",
-      "_userscore.1628df17.js",
-      "_index.0bde7d9c.js",
+      "_userscore.1e33b75a.js",
+      "_index.9f090500.js",
       "_echarts.128204f2.js"
     ]
   },
@@ -87,24 +87,24 @@
     ]
   },
   "assets/js/users/public.js": {
-    "file": "assets/users_public.717a50f5.js",
+    "file": "assets/users_public.00ea86d2.js",
     "src": "assets/js/users/public.js",
     "isEntry": true,
     "imports": [
       "assets/js/index.js",
-      "_userscore.1628df17.js",
-      "_index.0bde7d9c.js",
+      "_userscore.1e33b75a.js",
+      "_index.9f090500.js",
       "_echarts.128204f2.js"
     ]
   },
   "assets/js/users/private.js": {
-    "file": "assets/users_private.7b7b48a3.js",
+    "file": "assets/users_private.c81bdc04.js",
     "src": "assets/js/users/private.js",
     "isEntry": true,
     "imports": [
       "assets/js/index.js",
-      "_userscore.1628df17.js",
-      "_index.0bde7d9c.js",
+      "_userscore.1e33b75a.js",
+      "_index.9f090500.js",
       "_echarts.128204f2.js"
     ]
   },
@@ -130,17 +130,17 @@
       "assets/js/index.js"
     ]
   },
-  "_index.0bde7d9c.js": {
-    "file": "assets/index.0bde7d9c.js",
+  "_index.9f090500.js": {
+    "file": "assets/index.9f090500.js",
     "imports": [
       "_echarts.128204f2.js"
     ]
   },
-  "_userscore.1628df17.js": {
-    "file": "assets/userscore.1628df17.js",
+  "_userscore.1e33b75a.js": {
+    "file": "assets/userscore.1e33b75a.js",
     "imports": [
       "assets/js/index.js",
-      "_index.0bde7d9c.js"
+      "_index.9f090500.js"
     ]
   },
   "assets/scss/main.scss": {
