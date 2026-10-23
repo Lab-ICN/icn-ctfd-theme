@@ -69,3 +69,8 @@ EOF
 ```
 
 If you only edit `icn.css` or `home.js`, you can skip the build: copy them to `static/css/` and `static/js/`, then bump `icn_version` in `templates/base.html` and the version in `templates/page.html` so browsers fetch the new file.
+
+## TODO 
+- [] Make customizable color themes
+- [] Make a set of ready-to-use palettes
+
