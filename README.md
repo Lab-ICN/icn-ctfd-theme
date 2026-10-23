@@ -1,56 +1,71 @@
-# core-beta
+# ICN CTFd Theme
 
-Rewritten version of the CTFd core theme to use Bootstrap 5, Alpine.js, and vite to improve upon the existing CTFd theme structure.
+A CTFd theme for ICN-CTF, forked from the CTFd `core` theme (CTFd 3.8.x). Sky blue header, glass panels, dark and light mode.
 
-## Subtree Installation
+## Screenshots
 
-### Add repo to themes folder
+| Home | Challenges |
+| --- | --- |
+| ![Home](screenshots/home.png) | ![Challenges](screenshots/challenges.png) |
 
-```
-git subtree add --prefix CTFd/themes/core-beta git@github.com:CTFd/core-beta.git main --squash
-```
+| Scoreboard | Users |
+| --- | --- |
+| ![Scoreboard](screenshots/scoreboard.png) | ![Users](screenshots/users.png) |
 
-### Pull latest changes to subtree
+## Install
 
-```
-git subtree pull --prefix CTFd/themes/core-beta git@github.com:CTFd/core-beta.git main --squash
-```
+1. Copy this folder into your CTFd themes folder as `icn`:
 
-### Subtree Gotcha
-
-Make sure to use Merge Commits when dealing with the subtree here. For some reason Github's squash and commit uses the wrong line ending which causes issues with the subtree script: https://stackoverflow.com/a/47190256.
-
-## Creating Custom Theme (based on core-beta)
-
-To create a custom theme based on the core-beta one, here are the steps to follow:
-
-1. Clone core-beta theme locally to a seperate folder
-
-   ```
-   git clone https://github.com/CTFd/core-beta.git custom-theme
+   ```bash
+   git clone https://github.com/lab-icn/icn-ctfd-theme CTFd/CTFd/themes/icn
    ```
 
-   To clarify the structure of the project, the `./assets` folder contains the uncompiled source files (the ones you can modify), while the `./static` directory contains the compiled ones.
+   With the official `docker-compose.yml` the CTFd folder is mounted into the container, so no image rebuild is needed.
 
-2. Install [Yarn](https://classic.yarnpkg.com/en/) following the [official installation guides](https://classic.yarnpkg.com/en/docs/install).
+2. Restart CTFd so it picks up the new theme:
 
-   - **Yarn** is a dependency management tool used to install and manage project packages
-   - **[Vite](https://vite.dev/guide/)** handles the frontend tooling in CTFd by building optimized assets that are served through Flask.
+   ```bash
+   docker compose restart ctfd
+   ```
 
-3. Run `yarn install` in the root of `custom-theme` folder to install the necessary Node packages including `vite`.
+3. In the admin panel go to **Config > Theme**, set **Theme** to `icn` and click **Update**.
 
-4. Run the appropriate yarn build mode:
+4. Optional: click **Build** under **Theme Settings** to set:
 
-   - Run `yarn dev` (this will run `vite build --watch`) while developing the theme.
-   - Run `yarn build` (which will run `vite build`) for a one-time build.
-     Vite allows you to preview changes instantly with hot reloading.
+   - **Hero Title**: big title on the home page (defaults to the CTF name)
+   - **Hero Text**: text under the title (defaults to the CTF description)
+   - **Schedule Text**: line under the countdown, for example `Saturday, 09:00-17:00 WIB`
+   - **Navbar Icons**: text only, icon and text, or icon only with tooltips
 
-5. Now, you can start your modifications in the `assets` folder. Each time you save, Vite will automatically recompile everything (assuming you are using `yarn dev`), and you can directly see the result by importing your compiled theme into a CTFd instance.
-   Note: You do not need the `node_modules` folder, you can simply zip the theme directory without it.
+5. Optional: put your rules in **Pages > index**. That page content is shown in the Rules panel on the home page.
 
-6. When you are ready you can use `yarn build` to build the production copy of your theme.
+The countdown on the home page uses **Config > Start and End Time**.
 
-## Todo
+## Development
 
-- Document how we are using Vite
-- Create a cookie cutter template package to use with Vite
+Theme specific files:
+
+- `assets/icn/css/icn.css`: all ICN styles
+- `assets/icn/js/home.js`: home page data (countdown, categories, top 5)
+- `templates/`: Jinja templates, same template variables as `core`
+
+Build after changing anything in `assets/`:
+
+```bash
+yarn install
+yarn build
+```
+
+The build writes to `static/`. After a rebuild, clear the cached asset manifest or CTFd keeps serving old file names:
+
+```bash
+docker compose exec -T ctfd python - <<'EOF'
+from CTFd import create_app
+from CTFd.cache import cache
+from CTFd.utils import _get_asset_json
+with create_app().app_context():
+    cache.delete_memoized(_get_asset_json)
+EOF
+```
+
+If you only edit `icn.css` or `home.js`, you can skip the build: copy them to `static/css/` and `static/js/`, then bump `icn_version` in `templates/base.html` and the version in `templates/page.html` so browsers fetch the new file.
