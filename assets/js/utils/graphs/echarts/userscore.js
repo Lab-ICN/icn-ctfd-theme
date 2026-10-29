@@ -32,8 +32,9 @@ export function getOption(id, name, solves, awards, optionMerge) {
     },
     xAxis: [
       {
-        type: "time",
+        type: "category",
         boundaryGap: false,
+        data: [],
       },
     ],
     yAxis: [
@@ -73,6 +74,10 @@ export function getOption(id, name, solves, awards, optionMerge) {
     }
   }
 
+  times.forEach(time => {
+    option.xAxis[0].data.push(time);
+  });
+
   option.series.push({
     name: name,
     type: "line",
@@ -92,7 +97,7 @@ export function getOption(id, name, solves, awards, optionMerge) {
         color: colorHash(name + id),
       },
     },
-    data: cumulativeSum(scores).map((score, i) => [times[i], score]),
+    data: cumulativeSum(scores),
   });
 
   if (optionMerge) {
