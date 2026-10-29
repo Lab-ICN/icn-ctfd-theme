@@ -41,6 +41,10 @@ A CTFd theme for ICN-CTF, forked from the CTFd `core` theme (CTFd 3.8.x). Sky bl
 
 The countdown on the home page uses **Config > Start and End Time**.
 
+## Plugins
+
+If [ctfd-chall-manager](https://github.com/ctfer-io/ctfd-chall-manager) is installed, the theme restyles its Instances page and the instance box in the challenge window. Nothing to configure: the theme ships `templates/chall_manager_instances.html`, which CTFd picks over the plugin's own template while ICN is the active theme. Tested with v0.10.1.
+
 ## Development
 
 Theme specific files:

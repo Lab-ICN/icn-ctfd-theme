@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{# Overrides the instances page of the ctfd-chall-manager plugin (CTFer.io).
+   CTFd looks in the active theme before the plugin, so this file wins while ICN is active.
+   Uses only what the plugin's route passes: instances, mana_enabled, mana_remaining, mana_total. #}
+
+{% block content %}
+  {% set cm_unknown = mana_remaining == "unknown" %}
+
+  <div class="jumbotron instances-hero">
+    <div class="container">
+      <div class="profile-head">
+        <div>
+          <h1>{% trans %}Instances{% endtrans %}</h1>
+          <p class="instances-lead">
+            Your running challenge instances. Each one has its own address and expires on its own.
+            <a href="https://ctfer.io/docs" target="_blank" rel="noopener">Docs</a>
+          </p>
+        </div>
+
+        {% if mana_enabled %}
+          <div class="instances-mana">
+            <div class="top">
+              <div class="n">{{ "?" if cm_unknown else mana_remaining }}<small>/{{ mana_total }}</small></div>
+              <div class="l">Mana left</div>
+            </div>
+            <div class="instances-mana-bar">
+              {% if not cm_unknown and mana_total %}
+                <span style="width: {{ (mana_remaining / mana_total * 100) | round(1) }}%"></span>
+              {% endif %}
+            </div>
+            <div class="hint">Destroy an instance to get its mana back.</div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="container instances-page">
+    {% if cm_unknown %}
+      <div class="alert alert-warning">
+        Couldn't reach Chall-Manager, so this list may be incomplete. Try again in a moment.
+      </div>
+    {% endif %}
+
+    {% if instances %}
+      <section class="panel">
+        <h3>Running <span class="count">{{ instances | length }}</span></h3>
+
+        {% for instance in instances %}
+          {% set conn = instance.connectionInfo or "" %}
+          <div class="inst">
+            <div class="inst-id">
+              <div class="name">{{ instance.challengeName }}</div>
+              <div class="cat">
+                <span class="dot" data-category="{{ instance.challengeCategory }}"></span>
+                {{ instance.challengeCategory }}
+                {% if mana_enabled and instance.manaCost != "unknown" %}<span class="sep">·</span> {{ instance.manaCost }} mana{% endif %}
+              </div>
+            </div>
+
+            <div class="inst-conn">
+              <code title="{{ conn }}">{{ conn or "-" }}</code>
+              {% if conn and conn not in ["hidden", "unavailable"] %}
+                <button class="icon-btn" type="button" title="Copy" data-copy="{{ conn }}">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+                </button>
+              {% endif %}
+              {% if conn.startswith("http://") or conn.startswith("https://") %}
+                <a class="icon-btn" href="{{ conn }}" target="_blank" rel="noopener" title="Open">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
+                </a>
+              {% endif %}
+            </div>
+
+            <div class="inst-meta">
+              <div>
+                <div class="k">Started</div>
+                <div class="v" data-local-time="{{ instance.since }}">
+                  {% set since = instance.since.split('T') %}{{ since[0] }} {{ since[1][0:5] if since | length > 1 else "" }}
+                </div>
+              </div>
+              {% if instance.until %}
+                <span class="left" data-until="{{ instance.until }}">
+                  {% set until = instance.until.split('T') %}until {{ until[1][0:5] if until | length > 1 else until[0] }}
+                </span>
+              {% else %}
+                <span class="left">No expiry</span>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </section>
+    {% elif not cm_unknown %}
+      <section class="panel">
+        <div class="instances-empty">
+          <div class="ic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg>
+          </div>
+          <h4>No running instances</h4>
+          <p>Open a challenge that needs its own server and press Launch. It will show up here with its address.</p>
+          <a class="btn btn-primary" href="{{ url_for('challenges.listing') }}">{% trans %}Challenges{% endtrans %}</a>
+        </div>
+      </section>
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    (function () {
+      // Same palette and hash as assets/js/utils/icn.js, so categories match the profile pages
+      var PALETTE = ["#1090CA", "#6FDCB0", "#FFC875", "#FF9EC4", "#9B8CFF", "#7FD6E6", "#F4A26B", "#4DB2E2", "#B7E36F", "#C9A0FF"];
+      function categoryColor(name) {
+        var h = 0;
+        for (var ch of String(name)) h = (h * 31 + ch.codePointAt(0)) >>> 0;
+        return PALETTE[h % PALETTE.length];
+      }
+      document.querySelectorAll(".instances-page .dot[data-category]").forEach(function (d) {
+        d.style.background = categoryColor(d.dataset.category);
+      });
+
+      document.querySelectorAll("[data-local-time]").forEach(function (el) {
+        var d = new Date(el.dataset.localTime);
+        if (!isNaN(d)) {
+          el.textContent = d.toLocaleString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        }
+      });
+
+      document.querySelectorAll("[data-copy]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          navigator.clipboard.writeText(b.dataset.copy).then(function () {
+            b.classList.add("done");
+            setTimeout(function () { b.classList.remove("done"); }, 1200);
+          });
+        });
+      });
+
+      var timers = document.querySelectorAll("[data-until]");
+      function tick() {
+        var now = Date.now();
+        timers.forEach(function (el) {
+          var end = new Date(el.dataset.until).getTime();
+          if (isNaN(end)) return;
+          var s = Math.floor((end - now) / 1000);
+          el.classList.toggle("warn", s > 0 && s < 600);
+          el.classList.toggle("over", s <= 0);
+          if (s <= 0) {
+            el.textContent = "Expired";
+          } else if (s < 3600) {
+            el.textContent = Math.floor(s / 60) + "m " + String(s % 60).padStart(2, "0") + "s left";
+          } else {
+            el.textContent = Math.floor(s / 3600) + "h " + Math.floor((s % 3600) / 60) + "m left";
+          }
+        });
+      }
+      if (timers.length) {
+        tick();
+        setInterval(tick, 1000);
+      }
+    })();
+  </script>
+{% endblock %}

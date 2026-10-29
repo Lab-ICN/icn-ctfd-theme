@@ -1623,6 +1623,346 @@ hr {
   }
 }
 
+/* Chall-Manager plugin (ctfd-chall-manager by CTFer.io) ------------------ */
+/* Instances page: templates/chall_manager_instances.html */
+.instances-hero {
+  padding-bottom: 44px !important;
+}
+.instances-lead {
+  max-width: 52ch;
+  margin: 14px 0 0;
+  font-size: 16px;
+  color: rgba(254, 254, 254, 0.84);
+}
+.jumbotron .instances-lead a {
+  color: #fefefe;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.instances-mana {
+  min-width: 280px;
+  padding: 18px 22px;
+  border-radius: 22px;
+  color: #fefefe;
+  background: rgba(18, 24, 32, 0.24);
+  border: 1px solid rgba(254, 254, 254, 0.16);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.instances-mana .top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+.instances-mana .n {
+  font: 500 34px/1 var(--icn-sans);
+  letter-spacing: -0.04em;
+}
+.instances-mana .n small {
+  font-size: 16px;
+  letter-spacing: 0;
+  color: rgba(254, 254, 254, 0.7);
+}
+.instances-mana .l,
+.instances-mana .hint {
+  font-size: 13px;
+  color: rgba(254, 254, 254, 0.72);
+}
+.instances-mana .hint {
+  margin-top: 10px;
+  font-size: 12.5px;
+}
+.instances-mana-bar {
+  height: 8px;
+  margin-top: 14px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(254, 254, 254, 0.2);
+}
+.instances-mana-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: #fefefe;
+}
+.instances-page {
+  margin-bottom: 24px;
+}
+.instances-page .panel {
+  padding: 22px 24px;
+}
+.instances-page .panel h3 {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.instances-page .panel h3 .count {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--icn-text-3);
+}
+.inst {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.1fr) minmax(220px, 1.6fr) 250px;
+  gap: 20px;
+  align-items: center;
+  padding: 16px 0;
+  border-top: 1px solid var(--icn-line);
+}
+.inst:first-of-type {
+  padding-top: 4px;
+  border-top: 0;
+}
+.inst .name {
+  font-size: 16px;
+  font-weight: 600;
+}
+.inst .cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 3px;
+  font-size: 14px;
+  color: var(--icn-text-2);
+}
+.inst .dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--icn-line-2);
+}
+.inst .sep {
+  color: var(--icn-text-3);
+}
+.inst-conn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.inst-conn code {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 500 14px/1 var(--icn-mono);
+  color: var(--icn-text);
+  background: var(--icn-code-bg);
+  border: 1px solid var(--icn-line);
+  border-radius: 12px;
+}
+.instances-page .icon-btn {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border-radius: 12px;
+  color: var(--icn-text-2);
+  background: rgba(var(--icn-fg), 0.06);
+  border: 1px solid var(--icn-line);
+  cursor: pointer;
+  transition:
+    background-color 0.14s,
+    color 0.14s;
+}
+.instances-page .icon-btn:hover {
+  color: var(--icn-text);
+  background: rgba(var(--icn-fg), 0.1);
+}
+.instances-page .icon-btn.done {
+  color: var(--icn-green);
+}
+.instances-page .icon-btn svg {
+  width: 16px;
+  height: 16px;
+}
+.inst-meta {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  justify-content: flex-end;
+  text-align: right;
+}
+.inst-meta .k {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--icn-text-3);
+}
+.inst-meta .v {
+  font-size: 14.5px;
+  white-space: nowrap;
+  color: var(--icn-text-2);
+}
+.inst .left {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 11px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  color: var(--icn-green);
+  background: rgba(111, 220, 176, 0.12);
+}
+.inst .left::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.inst .left.warn {
+  color: var(--icn-amber);
+  background: rgba(255, 200, 117, 0.13);
+}
+.inst .left.over {
+  color: var(--icn-text-3);
+  background: rgba(var(--icn-fg), 0.06);
+}
+.instances-empty {
+  padding: 32px 20px 28px;
+  text-align: center;
+}
+.instances-empty .ic {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 14px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  color: var(--icn-blue-text);
+  background: rgba(16, 144, 202, 0.14);
+}
+.instances-empty .ic svg {
+  width: 24px;
+  height: 24px;
+}
+.instances-empty h4 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 600;
+}
+.instances-empty p {
+  max-width: 42ch;
+  margin: 0 auto 18px;
+  color: var(--icn-text-2);
+}
+
+/* Instance box in the challenge window: the plugin's view.html, restyled by id.
+   Its buttons carry inline colours, hence the !important. */
+#whale-panel {
+  text-align: left;
+}
+#whale-panel .card {
+  background: rgba(var(--icn-fg), 0.04) !important;
+  border: 1px solid var(--icn-line) !important;
+  border-radius: 18px !important;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+#cm-panel-loading {
+  padding: 18px;
+}
+#whale-panel .card-body {
+  padding: 18px;
+}
+#whale-panel .card-title {
+  margin-bottom: 6px;
+  font-size: 16px;
+  font-weight: 600;
+}
+#whale-panel .card-subtitle {
+  margin-bottom: 12px !important;
+  font-size: 13.5px;
+  color: var(--icn-text-3) !important;
+}
+#whale-panel .btn {
+  height: 40px;
+  margin: 4px 8px 0 0 !important;
+  padding: 0 18px;
+  border-radius: 999px !important;
+  font-weight: 500;
+  font-size: 14.5px;
+}
+#whale-panel .btn:disabled {
+  opacity: 0.6;
+}
+#whale-button-boot {
+  width: 100%;
+  height: 46px !important;
+  margin-right: 0 !important;
+  color: #fefefe !important;
+  background: var(--icn-blue) !important;
+  border: 1px solid var(--icn-blue) !important;
+}
+#whale-button-boot:hover:not(:disabled) {
+  background: #0e80b4 !important;
+}
+#whale-button-renew,
+#whale-button-restart {
+  color: var(--icn-text) !important;
+  background: rgba(var(--icn-fg), 0.06) !important;
+  border: 1px solid var(--icn-line-2) !important;
+}
+#whale-button-renew:hover:not(:disabled),
+#whale-button-restart:hover:not(:disabled) {
+  background: rgba(var(--icn-fg), 0.1) !important;
+}
+#whale-button-destroy {
+  color: var(--icn-red) !important;
+  background: transparent !important;
+  border: 1px solid rgba(255, 138, 138, 0.35) !important;
+}
+#whale-button-destroy:hover:not(:disabled) {
+  background: rgba(255, 138, 138, 0.1) !important;
+}
+#whale-challenge-count-down {
+  font-variant-numeric: tabular-nums;
+  color: var(--icn-green);
+}
+code:has(> #whale-challenge-lan-domain:not(:empty)) {
+  display: block;
+  margin-top: -4px;
+  padding: 11px 14px;
+  font: 500 14px/1.4 var(--icn-mono);
+  color: var(--icn-text);
+  background: var(--icn-code-bg);
+  border: 1px solid var(--icn-line);
+  border-radius: 12px;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 991.98px) {
+  .inst {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .inst-meta {
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+@media (max-width: 575.98px) {
+  .instances-mana {
+    min-width: 0;
+  }
+}
+
 /* Responsive --------------------------------------------------------------- */
 @media (max-width: 991.98px) {
   .hero {
