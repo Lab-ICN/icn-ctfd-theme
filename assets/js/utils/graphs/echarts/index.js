@@ -15,6 +15,7 @@ import { LabelLayout, UniversalTransition } from "echarts/features";
 // Import the Canvas renderer
 // Note that introducing the CanvasRenderer or SVGRenderer is a required step
 import { CanvasRenderer } from "echarts/renderers";
+import { ICN_PALETTE } from "../../icn";
 
 // Register the required components
 echarts.use([
@@ -34,18 +35,6 @@ echarts.use([
 
 // ICN: text and grid colours follow the page theme, series use the ICN palette.
 // Applied over each page's own option, so its data and layout are untouched.
-const ICN_PALETTE = [
-  "#1090CA",
-  "#6FDCB0",
-  "#FFC875",
-  "#FF9EC4",
-  "#9B8CFF",
-  "#7FD6E6",
-  "#F4A26B",
-  "#4DB2E2",
-  "#B7E36F",
-  "#C9A0FF",
-];
 
 function icnColors() {
   const light = document.documentElement.getAttribute("data-bs-theme") === "light";
