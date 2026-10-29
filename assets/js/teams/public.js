@@ -1,7 +1,7 @@
 import CTFd from "../index";
 
 import Alpine from "alpinejs";
-import { colorHash } from "@ctfdio/ctfd-js/ui";
+import { categoryColor } from "../utils/icn";
 import { getOption as getUserScoreOption } from "../utils/graphs/echarts/userscore";
 import { embed } from "../utils/graphs/echarts";
 
@@ -23,7 +23,11 @@ Alpine.data("TeamGraphs", () => ({
     return ((this.failCount / (this.solveCount + this.failCount)) * 100).toFixed(2);
   },
 
+  categoryColor,
+
   getCategoryBreakdown() {
+    // Alpine renders before init() has fetched the solves
+    if (!this.solves) return [];
     const categories = [];
     const breakdown = {};
 
@@ -45,7 +49,7 @@ Alpine.data("TeamGraphs", () => ({
         name: property,
         count: breakdown[property],
         percent: ((breakdown[property] / categories.length) * 100).toFixed(2),
-        color: colorHash(property),
+        color: categoryColor(property),
       });
     }
 

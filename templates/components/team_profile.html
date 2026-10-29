@@ -1,0 +1,95 @@
+{# Shared by teams/private.html and teams/public.html. Set profile_private before including.
+   The route passes team, solves, awards, place and score. #}
+<div class="jumbotron profile-hero">
+  <div class="container">
+    <div class="profile-head">
+      <div class="profile-who">
+        <div class="profile-avatar" aria-hidden="true">{{ team.name[:1] }}</div>
+        <div class="profile-id">
+          {% if profile_private %}
+            <h1 id="team-id" team-id="{{ team.id }}">{{ team.name }}</h1>
+          {% else %}
+            <h1 id="team-id" data-ctfd-team-id="{{ team.id }}">{{ team.name }}</h1>
+          {% endif %}
+
+          <div class="profile-chips">
+            {% if team.oauth_id %}
+              <a class="chip" href="https://majorleaguecyber.org/t/{{ team.name }}">{% trans %}Official{% endtrans %}</a>
+            {% endif %}
+
+            {% if team.bracket_id %}
+              <span class="chip">{{ team.bracket.name }}</span>
+            {% endif %}
+
+            {% for field in team.fields %}
+              <span class="chip"><span class="chip-key">{{ field.name }}</span> {{ field.value }}</span>
+            {% endfor %}
+
+            {% if team.affiliation %}
+              <span class="chip"><span class="chip-key">{% trans %}Affiliation{% endtrans %}</span> {{ team.affiliation }}</span>
+            {% endif %}
+
+            {% if team.country %}
+              <span class="chip">
+                <i class="flag-{{ team.country.lower() }}"></i>
+                {{ lookup_country_code(team.country) }}
+              </span>
+            {% endif %}
+
+            {% if team.website and (team.website.startswith('http://') or team.website.startswith('https://')) %}
+              <a class="chip" href="{{ team.website }}" target="_blank" rel="noopener" title="{{ team.website }}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
+                <span class="chip-url">{{ team.website.split('://')[-1].rstrip('/') }}</span>
+              </a>
+            {% endif %}
+          </div>
+
+          {% if profile_private %}
+            <div class="profile-actions" x-data="CaptainMenu">
+              <button type="button" class="chip edit-team" @click="editTeam()">
+                <i class="fas fa-cogs"></i> {% trans %}Edit Team{% endtrans %}
+              </button>
+              <button type="button" class="chip edit-captain" @click="chooseCaptain()">
+                <i class="fas fa-user-tag"></i> {% trans %}Choose Captain{% endtrans %}
+              </button>
+              <button type="button" class="chip invite-members" @click="inviteMembers()">
+                <i class="fas fa-ticket-alt"></i> {% trans %}Invite Users{% endtrans %}
+              </button>
+              <button type="button" class="chip chip-danger disband-team" @click="disbandTeam()">
+                <i class="fas fa-trash-alt"></i> {% trans %}Disband Team{% endtrans %}
+              </button>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="profile-stats">
+        <div class="profile-stat">
+          {# Place stays hidden when scores are hidden: the private page is the team's internal view.
+             Public page hiding is done at the route level. #}
+          <div class="n" id="team-place">
+            {% if scores_visible() and place %}
+              {{ place[:-2] }}<small>{{ place[-2:] }}</small>
+            {% else %}
+              -
+            {% endif %}
+          </div>
+          <div class="l">{% trans %}Place{% endtrans %}</div>
+        </div>
+        <div class="profile-stat">
+          <div class="n" id="team-score">{{ score if score else "-" }}</div>
+          <div class="l">{% trans %}Points{% endtrans %}</div>
+        </div>
+        <div class="profile-stat">
+          <div class="n">{{ solves | length }}</div>
+          <div class="l">{% trans %}Solves{% endtrans %}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% set profile_graphs = "TeamGraphs" %}
+{% set profile_members = team.members %}
+{% set profile_captain_id = team.captain_id %}
+{% include "components/profile_body.html" %}
