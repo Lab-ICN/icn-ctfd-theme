@@ -20,6 +20,6 @@
 {% block scripts %}
   {{ Assets.js("assets/js/page.js") }}
   {% if request.path == url_for('views.static_html', route='/') %}
-    <script defer src="{{ url_for('views.themes_beta', theme='icn', path='js/home.js') }}?v=2026.10.23.10"></script>
+    <script defer src="{{ url_for('views.themes_beta', theme=get_ctf_theme(), path='js/home.js') }}?v=2026.10.30.1"></script>
   {% endif %}
 {% endblock %}

@@ -16,8 +16,8 @@
     {{ Assets.css("assets/scss/main.scss") }}
   {% endblock %}
   {# Bump on every change to assets/icn/: theme files are served with a 1 hour browser cache #}
-  {% set icn_version = "2026.10.23.10" %}
-  <link rel="stylesheet" href="{{ url_for('views.themes_beta', theme='icn', path='css/icn.css') }}?v={{ icn_version }}">
+  {% set icn_version = "2026.10.30.1" %}
+  <link rel="stylesheet" href="{{ url_for('views.themes_beta', theme=get_ctf_theme(), path='css/icn.css') }}?v={{ icn_version }}">
 
   {{ Assets.js("assets/js/color_mode_switcher.js", type=None) }}
 
@@ -38,8 +38,8 @@
           'end': {{ Configs.end | tojson }},
           'themeSettings': {{ Configs.theme_settings | tojson }},
           'eventSounds': [
-            "/themes/icn/static/sounds/notification.webm",
-            "/themes/icn/static/sounds/notification.mp3",
+            "/themes/{{ get_ctf_theme() }}/static/sounds/notification.webm",
+            "/themes/{{ get_ctf_theme() }}/static/sounds/notification.mp3",
           ],
       }
   </script>
