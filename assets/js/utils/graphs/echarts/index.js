@@ -45,6 +45,7 @@ function icnColors() {
         grid: "rgba(18,24,32,.08)",
         axis: "rgba(18,24,32,.2)",
         label: "#121820",
+        tooltip: "rgba(255,255,255,.96)",
       }
     : {
         text: "rgba(254,254,254,.68)",
@@ -52,6 +53,7 @@ function icnColors() {
         grid: "rgba(254,254,254,.08)",
         axis: "rgba(254,254,254,.2)",
         label: "#FEFEFE",
+        tooltip: "rgba(22,34,52,.96)",
       };
 }
 
@@ -79,10 +81,48 @@ function icnOption(option) {
     color: c.text,
     fontFamily: '"Inter Tight", system-ui, sans-serif',
   };
+  // Title top left, toolbox top right, the zoom slider replaced by scroll/drag zoom
   if (option.title)
     o.title = {
       ...option.title,
-      textStyle: { ...(option.title.textStyle || {}), color: c.title, fontWeight: 600 },
+      left: 0,
+      top: 0,
+      textStyle: {
+        ...(option.title.textStyle || {}),
+        color: c.title,
+        fontWeight: 600,
+        fontSize: 16,
+      },
+    };
+  if (option.toolbox)
+    o.toolbox = {
+      ...option.toolbox,
+      right: 0,
+      top: 0,
+      iconStyle: { borderColor: c.text },
+      emphasis: { iconStyle: { borderColor: c.title, textFill: c.title } },
+    };
+  if (option.dataZoom) {
+    const zooms = Array.isArray(option.dataZoom) ? option.dataZoom : [option.dataZoom];
+    o.dataZoom = zooms.map(z =>
+      z.type === "slider"
+        ? {
+            type: "inside",
+            id: z.id,
+            xAxisIndex: z.xAxisIndex,
+            filterMode: z.filterMode,
+          }
+        : z,
+    );
+  }
+  if (option.grid) o.grid = { ...option.grid, top: 56, left: 8, right: 16 };
+  if (option.tooltip)
+    o.tooltip = {
+      ...option.tooltip,
+      backgroundColor: c.tooltip,
+      borderColor: c.axis,
+      textStyle: { color: c.title },
+      axisPointer: { type: "line", lineStyle: { color: c.axis } },
     };
   if (option.legend)
     o.legend = {
@@ -103,10 +143,14 @@ function icnOption(option) {
         ...((x && x.normal) || {}),
         normal: undefined,
       });
+      // Scores only change on a solve, so draw steps rather than slopes
       const out = {
         ...s,
+        step: "end",
+        symbol: "circle",
+        symbolSize: 6,
         itemStyle: { ...flat(s.itemStyle), color },
-        lineStyle: { ...flat(s.lineStyle), color },
+        lineStyle: { ...flat(s.lineStyle), color, width: 2 },
       };
       if (s.areaStyle) out.areaStyle = { ...flat(s.areaStyle), color, opacity: 0.18 };
       if (s.label) out.label = { ...flat(s.label), color: c.label, textBorderWidth: 0 };
