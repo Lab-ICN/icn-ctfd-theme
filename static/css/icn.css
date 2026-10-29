@@ -238,6 +238,11 @@ main > .container:first-child {
   padding: 18px 0;
   background: transparent;
 }
+/* Admin "Theme Color" injects .navbar{background-color: ... !important}; the
+   navbar sits on the sky band, so keep it transparent whatever colour is set */
+.navbar.icn-nav {
+  background-color: transparent !important;
+}
 .icn-nav .navbar-brand {
   font: 700 22px/1 var(--icn-sans);
   letter-spacing: -0.03em;
